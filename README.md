@@ -79,4 +79,13 @@ https://sushmita25dubey.github.io/DEV-Earth-Day-2026-Weekend-Challenge/
 
 ---
 
-Small commute choices can create measurable climate impact.
+🏆 Conclusion
+
+GreenRoute demonstrates how everyday commuting choices can become measurable climate action. By combining route comparison, carbon awareness, and AI-powered sustainability guidance, the project reimagines navigation through an environmental lens.
+
+Small commute choices can create a measurable climate impact.
+
+👩‍💻 Author
+
+Sushmita Dubey
+B.Tech CSE | AI & Web Development ❤️
