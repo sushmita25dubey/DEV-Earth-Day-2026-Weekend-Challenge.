@@ -67,7 +67,7 @@ Built for the **DEV Earth Day 2026 Weekend Challenge**.
 
 ## 🔗 Live Demo
 
-https://sushmita25dubey.github.io/DEV-Earth-Day-2026-Weekend-Challenge/
+//sushmita25dubey.github.io/DEV-Earth-Day-2026-Weekend-Challenge./
 
 ---
 
