@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GreenRoute - Smart Low-Carbon Route Planner</title>
+  <meta name="description" content="Choose Routes. Cut Carbon. Commute Smarter.">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <!-- Lucide icons script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container nav-content">
+      <div class="logo">
+        <i data-lucide="leaf" class="text-accent"></i>
+        <span>Green<span class="text-accent">Route</span></span>
+      </div>
+      <button id="theme-toggle" class="btn-icon">
+        <i data-lucide="sun" id="theme-icon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container text-center">
+      <h1>Choose Routes. <span class="text-accent">Cut Carbon.</span> Commute Smarter.</h1>
+      <p>Discover the eco-friendly way to your destination and accurately track your environmental impact.</p>
+    </div>
+  </header>
+
+  <!-- Impact Banner (Hidden until route selected) -->
+  <div class="container mb-2">
+    <div id="impact-banner" class="impact-banner glass-panel gap-1-5 hidden fade-in">
+      <div class="impact-icon-box">
+        <i data-lucide="globe-2" style="width: 24px; height: 24px;"></i>
+      </div>
+      <div style="flex: 1;">
+        <h3 id="impact-headline" class="impact-headline">This route choice avoids <span class="text-accent">240 kg
+            CO₂/year</span> 🌍</h3>
+        <p id="impact-cardays" class="text-secondary text-sm mt-1" style="margin-top: 0.25rem;">Equivalent to removing a
+          commuter car from roads for <span class="text-primary font-bold">X days</span>.</p>
+      </div>
+    </div>
+  </div>
+
+  <main class="container layout-grid">
+    <div class="left-panel flex-col gap-1-5">
+      <!-- Route Input -->
+      <section class="glass-panel slide-up">
+        <h2 class="section-title"><i data-lucide="navigation" style="width:20px;"></i> Plan Your Route</h2>
+        <form id="route-form">
+          <div class="input-group">
+            <i data-lucide="map-pin"></i>
+            <input type="text" id="start-location" placeholder="Starting location (e.g. Home)" required>
+          </div>
+          <div class="input-group">
+            <i data-lucide="map-pin" class="text-danger"></i>
+            <input type="text" id="dest-location" placeholder="Destination (e.g. College)" required>
+          </div>
+          <button type="submit" class="btn-primary w-100">Find Greenest Route</button>
+        </form>
+      </section>
+
+      <!-- Carbon Savings Calculator (hidden initially) -->
+      <section id="carbon-savings-panel" class="glass-panel hidden fade-in">
+        <!-- populated via js -->
+      </section>
+
+      <!-- Earth Day Pledge Section -->
+      <section class="glass-panel slide-up" style="animation-delay: 0.1s">
+        <h2 class="section-title"><i data-lucide="award" class="text-warning" style="width:20px;"></i> Earth Day Pledge
+        </h2>
+        <div class="pledge-card">
+          <p class="text-primary mb-1 font-bold">“I commit to choosing green routes 3 days a week.”</p>
+          <div class="progress-bar mb-1" style="margin-top: 1.25rem; margin-bottom: 0.75rem;">
+            <div class="progress-fill warning-fill" id="pledge-progress" style="width: 0%;"></div>
+          </div>
+          <div class="flex-between text-sm text-secondary mb-2">
+            <span id="pledge-status" class="font-bold">0/3 Days</span>
+            <span>Earth Day Challenge</span>
+          </div>
+          <button id="pledge-btn" class="btn-secondary w-100">
+            <i data-lucide="check-circle" style="width:18px;"></i> Take the Pledge
+          </button>
+        </div>
+      </section>
+
+      <!-- What If Simulator -->
+      <section class="glass-panel slide-up" style="animation-delay: 0.2s">
+        <h2 class="section-title"><i data-lucide="sliders" style="width:20px;"></i> What-If Simulator</h2>
+        <p class="text-secondary" style="margin-bottom: 1.5rem;">What if I take the greenest route <span
+            id="sim-days-display" class="text-primary font-bold">3</span> days a week?</p>
+        <input type="range" id="sim-slider" min="1" max="7" value="3" class="slider mt-1">
+        <div class="flex-between text-secondary text-sm mt-1 mb-2">
+          <span>1 Day</span>
+          <span>7 Days</span>
+        </div>
+        <div class="grid-2 gap-1">
+          <div class="stat-card border-green">
+            <div class="stat-label">Monthly Savings</div>
+            <div class="stat-value" id="sim-monthly">-72 <span class="text-sm">kg CO₂</span></div>
+          </div>
+          <div class="stat-card border-accent">
+            <div class="stat-label">Annual Impact</div>
+            <div class="stat-value" id="sim-annual">-864 <span class="text-sm">kg CO₂</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="right-panel flex-col gap-1-5">
+      <!-- Route Map Visualization -->
+      <section id="mock-map-panel" class="glass-panel hidden fade-in mock-map-container">
+        <div class="mock-map-bg">
+          <svg width="100%" height="220" viewBox="0 0 400 220" preserveAspectRatio="none">
+            <!-- Mock stylized routes -->
+            <!-- Car Route (Red) -->
+            <path id="path-car" d="M 60 160 Q 150 40, 340 110" stroke="#FF4D4D" stroke-width="3" fill="none"
+              class="route-line" stroke-dasharray="6 6" />
+            <!-- Bus Route (Orange) -->
+            <path id="path-bus" d="M 60 160 Q 200 190, 340 110" stroke="#FFB84D" stroke-width="4" fill="none"
+              class="route-line" />
+            <!-- Bike/Walk Route (Green) -->
+            <path id="path-bike" d="M 60 160 Q 200 110, 340 110" stroke="#00FF88" stroke-width="5" fill="none"
+              class="route-line glow-line" />
+
+            <!-- Nodes -->
+            <circle cx="60" cy="160" r="7" fill="#E2E8F0" stroke="#0A192F" stroke-width="2" />
+            <circle cx="340" cy="110" r="7" fill="#E2E8F0" stroke="#0A192F" stroke-width="2" />
+          </svg>
+          <div class="map-overlay-labels">
+            <span class="map-label start-label">Start</span>
+            <span class="map-label dest-label">Destination</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Route Options -->
+      <section id="route-options-panel" class="hidden fade-in flex-col gap-1">
+        <h2 class="section-title"><i data-lucide="zap" style="width:20px;"></i> Available Routes</h2>
+        <div id="route-cards-container" class="flex-col gap-1">
+          <!-- Populated via JS -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Full Width Gemini AI Coach -->
+  <section class="container mb-2">
+    <div class="glass-panel chat-panel slide-up" style="animation-delay: 0.3s; width: 100%;">
+      <div class="chat-header">
+        <div class="chat-icon"><i data-lucide="sparkles" style="width:20px;"></i></div>
+        <div>
+          <h3 style="margin: 0; line-height: 1.2; font-size: 1.1rem;">Gemini Climate Coach</h3>
+          <span class="text-accent text-sm font-bold">AI Assistant</span>
+        </div>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <!-- populated via js -->
+      </div>
+      <div class="chat-suggestions" id="chat-suggestions">
+        <button class="chat-chip">How can I reduce commute emissions?</button>
+        <button class="chat-chip">Is cycling always greener?</button>
+        <button class="chat-chip">Best route for students?</button>
+      </div>
+      <form id="chat-form" class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Ask about sustainability..." class="input-field"
+          style="background: rgba(255,255,255,0.02);" required>
+        <button type="submit" class="btn-primary icon-only"><i data-lucide="send" style="width:18px;"></i></button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer fade-in">
+    <div class="container text-center">
+      <p class="text-secondary text-sm">Built for Earth Day 2026 Weekend Challenge 🌍</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
